@@ -1,0 +1,139 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ajax demo</title>
+</head>
+<body>
+    <form method="post" action="http://localhost:10011" enctype="text/plain">
+        <input type="text" value="aaabbb" name="uname" />
+        <input type="password" value="123123" name="pwd" />
+        <input type="submit">
+    </form>
+
+
+    <script src="ajaxutil.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+
+        var dd = {
+            "name" : "lx" ,
+            "sex" : "nan" ,
+            "like" : [1,2,3,4,5] ,
+            "age" : 12
+        } ;
+
+        dd.v = new Array();
+        dd.v.push(1);
+        dd.v.push(2);
+
+        var du = new ajaxutil();
+
+        du.ajaxPost('add.php', dd, function(data){
+            console.log(data) ;
+        });
+
+
+        /*
+        if(typeof(dd) != 'object'){
+
+            console.log(typeof(dd)) ;
+        }
+
+
+        for(a in dd)
+        {
+            console.log(typeof(dd[a]));
+            console.log(a + " = " + dd[a]) ;
+        }
+
+        */
+
+        // 异步ajax
+        function unsync()
+        {
+            try{
+                var xhr = new XMLHttpRequest();
+
+                xhr.onreadystatechange = function(){
+
+                    switch (xhr.readyState)
+                    {
+                        case 0:
+                            //未初始化
+                            break;
+                        case 1:
+                            //启动 open方法被调用
+                            break;
+                        case 2:
+                            //发送 send方法被调用
+                            break;
+                        case 3:
+                            //接收 已经收到部分响应数据
+                            break;
+                        case 4:
+                            //完成
+                            if ( (xhr.status>=200 && xhr.status<300) || xhr.status==304)
+                            {
+                                console.log("http status : " + xhr.status);
+                                console.log(xhr.responseText);
+                                //var myHeader = xhr.getResponseHeader("Content-Type");
+                                //console.log(myHeader) ;
+                                //var headers = xhr.getAllResponseHeaders();
+                                //console.log(headers) ;
+                            }
+                            else
+                            {
+                                console.log("http error : " + xhr.statusText);
+                            }
+                            break;
+                        default:
+                            //不存在
+                            break;
+                    }
+
+                } ;
+
+
+                xhr.open("post", "add.php", true); // 参数3设为true，使 ajax 异步执行
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");// The object's state must be OPENED.
+                var dds = encodeURIComponent('name') + "=" + encodeURIComponent('lx') ;
+                xhr.send( dds )
+
+            }catch( except ) {
+                console.log(except.toString());
+            }
+        }
+
+
+        //同步ajax
+        function sync()
+        {
+            try{
+                var xhr = new XMLHttpRequest();
+
+                xhr.open("get", "add.php?name=lx&age=12&sex=女", false);
+                xhr.send( null );
+
+                if ( (xhr.status>=200 && xhr.status<300) || xhr.status==304)
+                {
+                    console.log("http status : " + xhr.status);
+                    console.log(xhr.responseText);
+                }
+                else
+                {
+                    console.log("http error : " + xhr.statusText);
+                }
+
+                console.log("abc");
+
+            }catch( except ) {
+                console.log("浏览器不支持");
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>
